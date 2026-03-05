@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth">
+  <h2>Digital Banking Portal</h2>
+  <p class="muted">Fast account operations with a clean dashboard for daily banking.</p>
+  <div class="menu" style="margin-top: 10px;">
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
+  </div>
+</section>
+{% endblock %}

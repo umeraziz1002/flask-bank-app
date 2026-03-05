@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth">
+  <h2>Create Banking Profile</h2>
+  <p class="muted">This will create your customer profile, login, and primary savings account.</p>
+  <form method="post">
+    <input name="full_name" placeholder="Full name" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="phone" placeholder="Phone">
+    <input name="address_line" placeholder="Address line">
+    <div class="grid-2">
+      <input name="city" placeholder="City">
+      <input name="state" placeholder="State">
+    </div>
+    <div class="grid-2">
+      <input name="postal_code" placeholder="Postal code">
+      <input name="country" placeholder="Country">
+    </div>
+    <input name="username" placeholder="Username" required>
+    <input name="password" type="password" placeholder="Password" required>
+    <button type="submit">Register</button>
+  </form>
+</section>
+{% endblock %}

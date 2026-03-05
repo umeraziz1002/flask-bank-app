@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Deposit / Withdrawal</h2>
+  <form method="post">
+    <select name="account_id" required>
+      <option value="">Select account</option>
+      {% for a in accounts %}
+      <option value="{{ a.account_id }}">{{ a.account_number }} ({{ a.balance }})</option>
+      {% endfor %}
+    </select>
+    <select name="tx_type" required>
+      <option value="deposit">Deposit</option>
+      <option value="withdrawal">Withdrawal</option>
+    </select>
+    <input name="amount" type="number" step="0.01" min="0.01" placeholder="Amount" required>
+    <button type="submit">Submit</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h3>Recent Transactions</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Ref</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+      {% for t in transactions %}
+      <tr>
+        <td>{{ t.reference_no }}</td>
+        <td>{{ t.tx_type }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

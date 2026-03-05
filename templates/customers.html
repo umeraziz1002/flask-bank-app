@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Customers</h2>
+<table>
+    <tr>
+        <th>CustomerID</th><th>Name</th><th>Address</th><th>Contact</th><th>Username</th>
+    </tr>
+    {% for c in customers %}
+    <tr>
+        <td>{{ c.CustomerID }}</td>
+        <td>{{ c.Name }}</td>
+        <td>{{ c.Address }}</td>
+        <td>{{ c.Contact }}</td>
+        <td>{{ c.Username }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<form method="post">
+    <input name="customer_id" type="number" placeholder="CustomerID" required>
+    <input name="name" placeholder="Name" required>
+    <input name="address" placeholder="Address">
+    <input name="contact" placeholder="Contact">
+    <input name="username" placeholder="Username" required>
+    <input name="password" placeholder="Password" required>
+    <button type="submit">Add Customer</button>
+</form>
+{% endblock %}

@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northstar Bank</title>
+  <style>
+    :root {
+      --bg-a: #071922;
+      --bg-b: #0d3a47;
+      --paper: #f7fbfc;
+      --ink: #10212a;
+      --muted: #53717d;
+      --line: #d7e6ec;
+      --accent: #f29f05;
+      --accent-ink: #582f00;
+      --good: #1f8a46;
+      --bad: #b6352b;
+      --card-shadow: 0 12px 28px rgba(6, 25, 34, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 6%, rgba(242, 159, 5, 0.2) 0, rgba(242, 159, 5, 0) 28%),
+        radial-gradient(circle at 92% 12%, rgba(57, 177, 206, 0.18) 0, rgba(57, 177, 206, 0) 25%),
+        linear-gradient(130deg, var(--bg-a), var(--bg-b));
+      padding: 22px;
+    }
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+      animation: rise 0.45s ease-out;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-family: Cambria, "Palatino Linotype", serif;
+      letter-spacing: 0.3px;
+    }
+
+    .brand small { color: var(--muted); }
+
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .menu a:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .flash {
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin: 10px 0;
+      border: 1px solid;
+      font-size: 0.94rem;
+    }
+
+    .flash.success {
+      color: #145b2f;
+      background: #e9f8ee;
+      border-color: #99d8af;
+    }
+
+    .flash.error {
+      color: #7d1f1a;
+      background: #fceceb;
+      border-color: #f3aaa4;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .panel h2, .panel h3 {
+      margin: 0 0 10px;
+      font-family: Cambria, "Palatino Linotype", serif;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .kpi {
+      background: linear-gradient(160deg, #ffffff, #f2f8fb);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .kpi .label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi .value {
+      font-size: 1.22rem;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+    }
+
+    input, select, button {
+      border: 1px solid #bfd3dc;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    button {
+      background: var(--accent);
+      border-color: #df9104;
+      color: var(--accent-ink);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.03); }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 9px;
+      border-bottom: 1px solid #e1edf2;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.92rem;
+    }
+
+    th {
+      color: #21414f;
+      background: #eef6f9;
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    tr:nth-child(even) td { background: #fbfdfe; }
+
+    .muted { color: var(--muted); }
+
+    .auth {
+      max-width: 480px;
+      margin: 40px auto 0;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 12px; }
+      .shell { padding: 14px; border-radius: 16px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .menu a { font-size: 0.86rem; padding: 6px 10px; }
+      .topbar { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Northstar Digital Banking</h1>
+        <small>Secure retail banking portal</small>
+      </div>
+      <nav class="menu">
+        {% if session.get('customer_id') %}
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('accounts') }}">Accounts</a>
+          <a href="{{ url_for('balance') }}">Balance</a>
+          <a href="{{ url_for('transactions') }}">Cash Ops</a>
+          <a href="{{ url_for('beneficiaries') }}">Beneficiaries</a>
+          <a href="{{ url_for('transfer') }}">Transfer</a>
+          <a href="{{ url_for('history') }}">History</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% if msgs %}
+        {% for cat, msg in msgs %}
+          <div class="flash {{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

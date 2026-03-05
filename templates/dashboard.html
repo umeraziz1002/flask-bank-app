@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid-2">
+  <section class="kpi">
+    <div class="label">Customer</div>
+    <div class="value">{{ customer.full_name }}</div>
+  </section>
+  <section class="kpi">
+    <div class="label">Total Balance</div>
+    <div class="value">{{ total_balance }}</div>
+  </section>
+</div>
+
+<section class="panel">
+  <h2>My Accounts</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Account No</th><th>Type</th><th>Status</th><th>Balance</th></tr>
+      {% for a in accounts %}
+      <tr>
+        <td>{{ a.account_number }}</td>
+        <td>{{ a.account_type }}</td>
+        <td>{{ a.status }}</td>
+        <td>{{ a.balance }} {{ a.currency_code }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}
