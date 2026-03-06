@@ -24,7 +24,6 @@ class Customer(db.Model):
 
     auth = db.relationship("UserAuth", backref="customer", uselist=False, cascade="all, delete-orphan")
     accounts = db.relationship("Account", backref="customer", lazy=True, cascade="all, delete-orphan")
-    beneficiaries = db.relationship("Beneficiary", backref="customer", lazy=True, cascade="all, delete-orphan")
 
 
 class UserAuth(db.Model):
@@ -58,20 +57,6 @@ class Account(db.Model):
     status = db.Column(db.String(20), nullable=False, default="active")
     opened_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     closed_at = db.Column(db.DateTime, nullable=True)
-
-
-class Beneficiary(db.Model):
-    __tablename__ = "beneficiary"
-
-    beneficiary_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey("customer.customer_id"), nullable=False)
-    nickname = db.Column(db.String(100), nullable=True)
-    beneficiary_name = db.Column(db.String(255), nullable=False)
-    beneficiary_account_no = db.Column(db.String(50), nullable=False)
-    beneficiary_bank = db.Column(db.String(255), nullable=False)
-    ifsc_swift_code = db.Column(db.String(50), nullable=True)
-    is_verified = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 
 class BankTransaction(db.Model):

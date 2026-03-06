@@ -4,7 +4,6 @@ Flask + SQLite online banking demo with:
 - Registration and login
 - Account creation and balance check
 - Deposit / withdrawal
-- Beneficiary management
 - Money transfer
 - Transaction history
 

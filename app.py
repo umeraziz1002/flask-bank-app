@@ -7,7 +7,7 @@ from flask import Flask, flash, redirect, render_template, request, session, url
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from models import Account, AuditLog, BankTransaction, Beneficiary, Customer, UserAuth, db
+from models import Account, AuditLog, BankTransaction, Customer, UserAuth, db
 
 
 app = Flask(__name__)
@@ -268,40 +268,15 @@ def transactions():
     return render_template("transactions.html", accounts=my_accounts, transactions=history)
 
 
-@app.route("/beneficiaries", methods=["GET", "POST"])
-@login_required
-def beneficiaries():
-    customer = current_customer()
-
-    if request.method == "POST":
-        beneficiary = Beneficiary(
-            customer_id=customer.customer_id,
-            nickname=request.form.get("nickname", "").strip() or None,
-            beneficiary_name=request.form["beneficiary_name"].strip(),
-            beneficiary_account_no=request.form["beneficiary_account_no"].strip(),
-            beneficiary_bank=request.form["beneficiary_bank"].strip(),
-            ifsc_swift_code=request.form.get("ifsc_swift_code", "").strip() or None,
-            is_verified=True,
-        )
-        db.session.add(beneficiary)
-        db.session.commit()
-        flash("Beneficiary added.", "success")
-        return redirect(url_for("beneficiaries"))
-
-    items = Beneficiary.query.filter_by(customer_id=customer.customer_id).order_by(Beneficiary.created_at.desc()).all()
-    return render_template("beneficiaries.html", beneficiaries=items)
-
-
 @app.route("/transfer", methods=["GET", "POST"])
 @login_required
 def transfer():
     customer = current_customer()
     my_accounts = Account.query.filter_by(customer_id=customer.customer_id, status="active").order_by(Account.account_id).all()
-    my_beneficiaries = Beneficiary.query.filter_by(customer_id=customer.customer_id, is_verified=True).order_by(Beneficiary.beneficiary_id).all()
 
     if request.method == "POST":
         from_account_id = int(request.form["from_account_id"])
-        beneficiary_id = int(request.form["beneficiary_id"])
+        destination_account_number = request.form["destination_account_number"].strip()
         amount = Decimal(request.form["amount"])
 
         if amount <= 0:
@@ -309,17 +284,19 @@ def transfer():
             return redirect(url_for("transfer"))
 
         source = Account.query.filter_by(account_id=from_account_id, customer_id=customer.customer_id, status="active").first()
-        beneficiary = Beneficiary.query.filter_by(beneficiary_id=beneficiary_id, customer_id=customer.customer_id, is_verified=True).first()
-
-        if not source or not beneficiary:
-            flash("Invalid source account or beneficiary.", "error")
+        if not source:
+            flash("Invalid source account.", "error")
             return redirect(url_for("transfer"))
 
         if Decimal(source.balance) < amount:
             flash("Insufficient balance.", "error")
             return redirect(url_for("transfer"))
 
-        destination = Account.query.filter_by(account_number=beneficiary.beneficiary_account_no, status="active").first()
+        if destination_account_number == source.account_number:
+            flash("Source and destination accounts cannot be the same.", "error")
+            return redirect(url_for("transfer"))
+
+        destination = Account.query.filter_by(account_number=destination_account_number, status="active").first()
         ref = new_reference("TRF")
 
         source.balance = Decimal(source.balance) - amount
@@ -329,7 +306,7 @@ def transfer():
             tx_type="transfer_out",
             amount=amount,
             reference_no=ref + "-O",
-            description=f"Transfer to {beneficiary.beneficiary_name}",
+            description=f"Transfer to account {destination_account_number}",
             status="posted",
             posted_at=datetime.utcnow(),
         )
@@ -352,7 +329,7 @@ def transfer():
         log_event(
             "transfer",
             customer_id=customer.customer_id,
-            data=f"from={source.account_number},to={beneficiary.beneficiary_account_no},amount={amount}",
+            data=f"from={source.account_number},to={destination_account_number},amount={amount}",
         )
         db.session.commit()
 
@@ -362,7 +339,7 @@ def transfer():
             flash("Transfer recorded as external transfer.", "success")
         return redirect(url_for("transfer"))
 
-    return render_template("transfer.html", accounts=my_accounts, beneficiaries=my_beneficiaries)
+    return render_template("transfer.html", accounts=my_accounts)
 
 
 @app.route("/history")
