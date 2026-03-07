@@ -40,19 +40,6 @@ CREATE TABLE IF NOT EXISTS account (
   FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
 
-CREATE TABLE IF NOT EXISTS beneficiary (
-  beneficiary_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  customer_id INTEGER NOT NULL,
-  nickname TEXT,
-  beneficiary_name TEXT NOT NULL,
-  beneficiary_account_no TEXT NOT NULL,
-  beneficiary_bank TEXT NOT NULL,
-  ifsc_swift_code TEXT,
-  is_verified INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
-);
-
 CREATE TABLE IF NOT EXISTS bank_transaction (
   transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
   account_id INTEGER NOT NULL,
@@ -81,5 +68,4 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 CREATE INDEX IF NOT EXISTS idx_account_customer ON account(customer_id);
 CREATE INDEX IF NOT EXISTS idx_tx_account_time ON bank_transaction(account_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_beneficiary_customer ON beneficiary(customer_id);
 CREATE INDEX IF NOT EXISTS idx_audit_customer_time ON audit_log(customer_id, created_at DESC);
